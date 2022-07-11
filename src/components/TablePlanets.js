@@ -3,7 +3,6 @@ import MainContext from '../context/MainContext';
 
 const TablePlanets = () => {
   const { filterPlanet, isLoading } = useContext(MainContext);
-
   return (
     isLoading ? 'Carregando...'
       : (

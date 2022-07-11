@@ -4,13 +4,14 @@ import MainContext from './MainContext';
 import usePlanetList from '../hooks/usePlanetList';
 
 const ComContext = ({ children }) => {
-  const [isLoading, search, setSearch, filterPlanet] = usePlanetList('teste');
+  const [planetList, isLoading, search, setSearch, filterPlanet] = usePlanetList('teste');
 
   const context = {
     isLoading,
     search,
     setSearch,
     filterPlanet,
+    planetList,
   };
 
   return (

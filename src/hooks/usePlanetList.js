@@ -8,6 +8,7 @@ const usePlanetList = () => {
     filterByName: {
       name: '',
     },
+    filterByNumericValues: [],
   });
   useEffect(() => {
     const getPlanetList = async () => {
@@ -18,21 +19,35 @@ const usePlanetList = () => {
       setPlanetList(planets.results);
       setFilterPlanet(planets.results);
       setLoading(false);
-      console.log(planets.results);
     };
     getPlanetList();
   }, []);
 
   useEffect(() => {
     const filterPlanetList = () => {
-      const filterList = planetList.filter((planet) => (
-        planet.name.match(new RegExp(search.filterByName.name, 'i'))
+      const searchName = new RegExp(search.filterByName.name, 'i');
+      let filterList = planetList.filter((planet) => (
+        planet.name.match(searchName)
       ));
+      search.filterByNumericValues.forEach((term) => {
+        filterList = filterList.filter((planet) => {
+          switch (term.comparison) {
+          case 'maior que':
+            return Number(planet[term.column]) > Number(term.value);
+          case 'menor que':
+            return Number(planet[term.column]) < Number(term.value);
+          case 'igual a':
+            return Number(planet[term.column]) === Number(term.value);
+          default:
+            return true;
+          }
+        });
+      });
       setFilterPlanet(filterList);
     };
     filterPlanetList();
   }, [search, planetList]);
-  return [isLoading, search, setSearch, filterPlanet];
+  return [planetList, isLoading, search, setSearch, filterPlanet];
 };
 
 export default usePlanetList;
