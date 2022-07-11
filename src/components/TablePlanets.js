@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import MainContext from '../context/MainContext';
 
 const TablePlanets = () => {
-  const { planetList, isLoading } = useContext(MainContext);
+  const { filterPlanet, isLoading } = useContext(MainContext);
+
   return (
     isLoading ? 'Carregando...'
       : (
@@ -26,7 +27,7 @@ const TablePlanets = () => {
           </thead>
           <tbody>
             {
-              planetList.map((planet) => (
+              filterPlanet.map((planet) => (
                 <tr key={ planet.name }>
                   <td>{ planet.name }</td>
                   <td>{ planet.rotation_period }</td>
