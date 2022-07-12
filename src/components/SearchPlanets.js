@@ -33,7 +33,6 @@ const SearchPlanets = () => {
       );
       if (isDuplicate >= 0) {
         values.splice(isDuplicate, 1);
-        console.log(values);
       }
       return {
         ...state,
