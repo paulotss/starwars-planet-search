@@ -16,6 +16,9 @@ const usePlanetList = () => {
       const endpoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
       const planets = await fetch(endpoint).then((response) => response.json());
       planets.results.forEach((planet) => delete planet.residents);
+
+      // https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+      planets.results.sort((a, b) => a.name.localeCompare(b.name));
       setPlanetList(planets.results);
       setFilterPlanet(planets.results);
       setLoading(false);
@@ -45,7 +48,7 @@ const usePlanetList = () => {
     };
     filterPlanetList();
   }, [search, planetList]);
-  return [planetList, isLoading, search, setSearch, filterPlanet];
+  return [planetList, isLoading, search, setSearch, filterPlanet, setFilterPlanet];
 };
 
 export default usePlanetList;

@@ -3,6 +3,7 @@ import MainContext from '../context/MainContext';
 
 const TablePlanets = () => {
   const { filterPlanet, isLoading } = useContext(MainContext);
+
   return (
     isLoading ? 'Carregando...'
       : (
@@ -28,7 +29,7 @@ const TablePlanets = () => {
             {
               filterPlanet.map((planet) => (
                 <tr key={ planet.name }>
-                  <td>{ planet.name }</td>
+                  <td data-testid="planet-name">{ planet.name }</td>
                   <td>{ planet.rotation_period }</td>
                   <td>{ planet.orbital_period }</td>
                   <td>{ planet.diameter }</td>

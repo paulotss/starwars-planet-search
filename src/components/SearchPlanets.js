@@ -2,12 +2,14 @@ import React, { useContext, useState } from 'react';
 import MainContext from '../context/MainContext';
 
 const SearchPlanets = () => {
-  const { search, setSearch } = useContext(MainContext);
+  const { search, setSearch, handleOrder } = useContext(MainContext);
   const [form, setForm] = useState({
     name: '',
     column: 'population',
     comparison: 'maior que',
     number: 0,
+    orderColumn: 'population',
+    orderSort: 'ASC',
     itemsColumn: [
       'population',
       'orbital_period',
@@ -133,6 +135,42 @@ const SearchPlanets = () => {
         data-testid="button-remove-filters"
       >
         Remover filtros
+      </button>
+      <select name="orderColumn" data-testid="column-sort" onChange={ handleChange }>
+        <option>population</option>
+        <option>orbital_period</option>
+        <option>diameter</option>
+        <option>rotation_period</option>
+        <option>surface_water</option>
+      </select>
+      <label htmlFor="order_asc">
+        Ascendente
+        <input
+          data-testid="column-sort-input-asc"
+          type="radio"
+          name="orderSort"
+          id="order_asc"
+          value="ASC"
+          onChange={ handleChange }
+        />
+      </label>
+      <label htmlFor="order_desc">
+        Descendente
+        <input
+          data-testid="column-sort-input-desc"
+          type="radio"
+          name="orderSort"
+          id="order_desc"
+          value="DESC"
+          onChange={ handleChange }
+        />
+      </label>
+      <button
+        type="button"
+        onClick={ () => { handleOrder(form.orderColumn, form.orderSort); } }
+        data-testid="column-sort-button"
+      >
+        Ordenar
       </button>
       <div>
         {

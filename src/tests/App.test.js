@@ -74,16 +74,16 @@ describe('Testes da página App', () => {
       expect(rowsCount).toBe(10);
     });
 
-    userEvent.selectOptions(columnFilter, screen.getByText('orbital_period'));
-    userEvent.selectOptions(comparisonFilter, screen.getByText('maior que'));
+    userEvent.selectOptions(columnFilter, 'orbital_period');
+    userEvent.selectOptions(comparisonFilter, 'maior que');
     userEvent.type(valueFilter, '{selectall}{backspace}400');
     userEvent.click(buttonFilter);
-    userEvent.selectOptions(columnFilter, screen.getByText('diameter'));
-    userEvent.selectOptions(comparisonFilter, screen.getByText('menor que'));
+    userEvent.selectOptions(columnFilter, 'diameter');
+    userEvent.selectOptions(comparisonFilter, 'menor que');
     userEvent.type(valueFilter, '{selectall}{backspace}100000');
     userEvent.click(buttonFilter);
-    userEvent.selectOptions(columnFilter, screen.getByText('surface_water'));
-    userEvent.selectOptions(comparisonFilter, screen.getByText('igual a'));
+    userEvent.selectOptions(columnFilter, 'surface_water');
+    userEvent.selectOptions(comparisonFilter, 'igual a');
     userEvent.type(valueFilter, '{selectall}{backspace}8');
     userEvent.click(buttonFilter);
 
@@ -106,7 +106,7 @@ describe('Testes da página App', () => {
       expect(rowsCount).toBe(10);
     });
 
-    userEvent.selectOptions(columnFilter, screen.getByText('orbital_period'));
+    userEvent.selectOptions(columnFilter, 'orbital_period');
     userEvent.selectOptions(comparisonFilter, screen.getByText('maior que'));
     userEvent.type(valueFilter, '{selectall}{backspace}400');
     userEvent.click(buttonFilter);
@@ -136,11 +136,11 @@ describe('Testes da página App', () => {
       expect(rowsCount).toBe(10);
     });
 
-    userEvent.selectOptions(columnFilter, screen.getByText('orbital_period'));
+    userEvent.selectOptions(columnFilter, 'orbital_period');
     userEvent.selectOptions(comparisonFilter, screen.getByText('maior que'));
     userEvent.type(valueFilter, '{selectall}{backspace}400');
     userEvent.click(buttonFilter);
-    userEvent.selectOptions(columnFilter, screen.getByText('diameter'));
+    userEvent.selectOptions(columnFilter, 'diameter');
     userEvent.selectOptions(comparisonFilter, screen.getByText('menor que'));
     userEvent.type(valueFilter, '{selectall}{backspace}100000');
     userEvent.click(buttonFilter);
@@ -157,6 +157,33 @@ describe('Testes da página App', () => {
     expect(columnFilter.childElementCount).toBe(5);
     expect(screen.queryAllByTestId('filter')).toHaveLength(0);
     expect(rowsCount).toBe(10);
+  });
+
+  test('Verifica ordenação da tabela', async () => {
+    render(<App />);
+    await waitFor(() => {
+      const firstTd = screen.getAllByTestId('planet-name');
+      expect(firstTd[0]).toContainHTML("<td data-testid='planet-name'>Alderaan</td>")
+    });
+
+    const selectColumnOrder = screen.getByTestId('column-sort');
+    const radioAsc = screen.getByTestId('column-sort-input-asc');
+    const radioDesc = screen.getByTestId('column-sort-input-desc');
+    const buttonOrder = screen.getByTestId('column-sort-button');
+
+    userEvent.selectOptions(selectColumnOrder, 'diameter');
+    userEvent.click(radioAsc);
+    userEvent.click(buttonOrder);
+
+    expect(screen.getAllByTestId('planet-name')[0])
+      .toContainHTML("<td data-testid='planet-name'>Endor</td>");
+
+    userEvent.click(radioDesc);
+    userEvent.click(buttonOrder);
+
+    expect(screen.getAllByTestId('planet-name')[0])
+      .toContainHTML("<td data-testid='planet-name'>Bespin</td>");
+
   })
 
 })
