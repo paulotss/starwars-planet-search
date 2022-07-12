@@ -36,10 +36,8 @@ const usePlanetList = () => {
             return Number(planet[term.column]) > Number(term.value);
           case 'menor que':
             return Number(planet[term.column]) < Number(term.value);
-          case 'igual a':
-            return Number(planet[term.column]) === Number(term.value);
           default:
-            return true;
+            return Number(planet[term.column]) === Number(term.value);
           }
         });
       });

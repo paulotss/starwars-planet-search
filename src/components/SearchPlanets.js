@@ -144,7 +144,7 @@ const SearchPlanets = () => {
                 type="button"
                 onClick={ handleDeleteFilter }
               >
-                Exluir
+                Excluir
               </button>
             </p>
           ))

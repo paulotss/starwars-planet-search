@@ -82,8 +82,6 @@ describe('Testes da página App', () => {
     userEvent.selectOptions(comparisonFilter, screen.getByText('menor que'));
     userEvent.type(valueFilter, '{selectall}{backspace}100000');
     userEvent.click(buttonFilter);
-    userEvent.type(valueFilter, '{selectall}{backspace}100000');
-    userEvent.click(buttonFilter);
     userEvent.selectOptions(columnFilter, screen.getByText('surface_water'));
     userEvent.selectOptions(comparisonFilter, screen.getByText('igual a'));
     userEvent.type(valueFilter, '{selectall}{backspace}8');
@@ -93,6 +91,72 @@ describe('Testes da página App', () => {
     const rowsCount = tablePlanet.lastChild.childElementCount;
     expect(rowsCount).toBe(2);
 
+  });
+
+  test('Verfica exclusão de filtros', async () => {
+    render(<App />);
+    const columnFilter = screen.getByTestId('column-filter');
+    const comparisonFilter = screen.getByTestId('comparison-filter');
+    const valueFilter = screen.getByTestId('value-filter');
+    const buttonFilter = screen.getByTestId('button-filter');
+
+    await waitFor(() => {
+      const tablePlanet = screen.getByRole('table');
+      const rowsCount = tablePlanet.lastChild.childElementCount;
+      expect(rowsCount).toBe(10);
+    });
+
+    userEvent.selectOptions(columnFilter, screen.getByText('orbital_period'));
+    userEvent.selectOptions(comparisonFilter, screen.getByText('maior que'));
+    userEvent.type(valueFilter, '{selectall}{backspace}400');
+    userEvent.click(buttonFilter);
+
+    expect(columnFilter.childElementCount).toBe(4);
+
+    const deleteButton = screen.getByText('Excluir');
+    userEvent.click(deleteButton);
+
+    const tablePlanet = screen.getByRole('table');
+    const rowsCount = tablePlanet.lastChild.childElementCount;
+    expect(columnFilter.childElementCount).toBe(5);
+    expect(rowsCount).toBe(10);
+  });
+
+  test('Verificar botão de deletar tudo', async () => {
+    render(<App />);
+    const columnFilter = screen.getByTestId('column-filter');
+    const comparisonFilter = screen.getByTestId('comparison-filter');
+    const valueFilter = screen.getByTestId('value-filter');
+    const buttonFilter = screen.getByTestId('button-filter');
+    const deleteAll = screen.getByTestId('button-remove-filters');
+
+    await waitFor(() => {
+      const tablePlanet = screen.getByRole('table');
+      const rowsCount = tablePlanet.lastChild.childElementCount;
+      expect(rowsCount).toBe(10);
+    });
+
+    userEvent.selectOptions(columnFilter, screen.getByText('orbital_period'));
+    userEvent.selectOptions(comparisonFilter, screen.getByText('maior que'));
+    userEvent.type(valueFilter, '{selectall}{backspace}400');
+    userEvent.click(buttonFilter);
+    userEvent.selectOptions(columnFilter, screen.getByText('diameter'));
+    userEvent.selectOptions(comparisonFilter, screen.getByText('menor que'));
+    userEvent.type(valueFilter, '{selectall}{backspace}100000');
+    userEvent.click(buttonFilter);
+
+    screen.getAllByTestId('filter');
+    expect(screen.getAllByTestId('filter')).toHaveLength(2);
+
+    expect(columnFilter.childElementCount).toBe(3);
+
+    userEvent.click(deleteAll);
+
+    const tablePlanet = screen.getByRole('table');
+    const rowsCount = tablePlanet.lastChild.childElementCount;
+    expect(columnFilter.childElementCount).toBe(5);
+    expect(screen.queryAllByTestId('filter')).toHaveLength(0);
+    expect(rowsCount).toBe(10);
   })
 
 })
