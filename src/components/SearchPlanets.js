@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import MainContext from '../context/MainContext';
 
 const SearchPlanets = () => {
-  const { setSearch } = useContext(MainContext);
+  const { search, setSearch } = useContext(MainContext);
   const [form, setForm] = useState({
     name: '',
     column: 'population',
@@ -48,6 +48,35 @@ const SearchPlanets = () => {
       ...state,
       column: state.itemsColumn.find((item) => item !== form.column),
       itemsColumn: state.itemsColumn.filter((item) => item !== form.column),
+    }));
+  };
+
+  const handleDeleteFilter = ({ target: { name } }) => {
+    setSearch((state) => ({
+      ...state,
+      filterByNumericValues: state.filterByNumericValues.filter((item) => (
+        item.column !== name)),
+    }));
+    setForm((state) => ({
+      ...state,
+      itemsColumn: [...state.itemsColumn, name],
+    }));
+  };
+
+  const handleDeleteAllFilters = () => {
+    setSearch((state) => ({
+      ...state,
+      filterByNumericValues: [],
+    }));
+    setForm((state) => ({
+      ...state,
+      itemsColumn: [
+        'population',
+        'orbital_period',
+        'diameter',
+        'rotation_period',
+        'surface_water',
+      ],
     }));
   };
 
@@ -98,6 +127,29 @@ const SearchPlanets = () => {
       >
         Filtrar
       </button>
+      <button
+        type="button"
+        onClick={ handleDeleteAllFilters }
+        data-testid="button-remove-filters"
+      >
+        Remover filtros
+      </button>
+      <div>
+        {
+          search.filterByNumericValues.map((item, index) => (
+            <p data-testid="filter" key={ index }>
+              {`${item.column} ${item.comparison} ${item.value}`}
+              <button
+                name={ item.column }
+                type="button"
+                onClick={ handleDeleteFilter }
+              >
+                Exluir
+              </button>
+            </p>
+          ))
+        }
+      </div>
     </header>
   );
 };
