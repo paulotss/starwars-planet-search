@@ -8,6 +8,13 @@ const SearchPlanets = () => {
     column: 'population',
     comparison: 'maior que',
     number: 0,
+    itemsColumn: [
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ],
   });
 
   const handleChange = ({ target: { value, name } }) => {
@@ -26,24 +33,22 @@ const SearchPlanets = () => {
   };
 
   const handleFilter = () => {
-    setSearch((state) => {
-      const values = state.filterByNumericValues;
-      const isDuplicate = values.findIndex(
-        (val) => val.column === form.column,
-      );
-      if (isDuplicate >= 0) {
-        values.splice(isDuplicate, 1);
-      }
-      return {
+    setSearch((state) => (
+      {
         ...state,
-        filterByNumericValues: [...values,
+        filterByNumericValues: [...state.filterByNumericValues,
           {
             column: form.column,
             comparison: form.comparison,
             value: form.number,
           }],
-      };
-    });
+      }
+    ));
+    setForm((state) => ({
+      ...state,
+      column: state.itemsColumn.find((item) => item !== form.column),
+      itemsColumn: state.itemsColumn.filter((item) => item !== form.column),
+    }));
   };
 
   return (
@@ -62,11 +67,11 @@ const SearchPlanets = () => {
         name="column"
         data-testid="column-filter"
       >
-        <option>population</option>
-        <option>orbital_period</option>
-        <option>diameter</option>
-        <option>rotation_period</option>
-        <option>surface_water</option>
+        {
+          form.itemsColumn.map((item) => (
+            <option value={ item } key={ item }>{ item }</option>
+          ))
+        }
       </select>
       <select
         value={ form.comparison }
